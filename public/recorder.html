@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>audiofp</title>
+  </head>
+  <body>
+    <h1>audiofp</h1>
+
+    <button class= 'a'>감지시작</button>
+    <button class= 'b'>감지중단</button>
+    <audio controls></audio>
+    <audio controls class="show"></audio>
+    <div class='result'></div>
+    <script>
+
+    var audio=document.querySelector('audio');
+    var a = document.querySelector('.a')
+    var b = document.querySelector(".b");
+    var clicked = false;
+    var chunks = [];
+       
+
+     if (navigator.mediaDevices) {
+    console.log('getUserMedia supported.');
+    navigator.mediaDevices.getUserMedia ({audio: true})
+    .then(function(stream) {
+        audio.srcObject = stream;
+        audio.onloadedmetadata = function(e) {
+            audio.play();
+        };
+     var ac = new AudioContext();
+     var source = ac.createMediaStreamSource(stream);
+     var dest = ac.createMediaStreamDestination();
+     var mediaRecorder = new MediaRecorder(dest.stream);
+     source.connect(dest);
+     
+
+     mediaRecorder.ondataavailable = function(evt) {
+       // push each chunk (blobs) in an array
+       chunks.push(evt.data);
+       var blob = new Blob(chunks, { 'type' : 'audio/mp23423423eg' });
+      //  blob = URL.createObjectURL(blob);
+       console.log(blob);
+      sendAjax('http://127.0.0.1:3000/ajax',blob);
+       chunks=[]
+     };
+
+     mediaRecorder.onstop = function(evt) {
+       // Make blob out of our blobs, and open it.
+       var blob = new Blob(chunks, { 'type' : 'audio/mpe23423423423423g' });
+       blob = URL.createObjectURL(blob);
+       console.log(blob);
+      sendAjax('http://127.0.0.1:3000/ajax',blob);
+       chunks=[]
+     };
+
+     a.addEventListener("click", function(e) {
+      
+            mediaRecorder.start(10000);
+            console.log('start');
+           
+
+           b.addEventListener('click',function(e){
+              mediaRecorder.stop();
+              console.log('off');
+              });
+          });
+
+    
+          
+    })
+  }
+  function sendAjax(url,data){
+    var xhr= new XMLHttpRequest();
+    var formdata= new FormData();
+    formdata.append("please",data);
+    xhr.open('post',url)
+    // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+    xhr.responseType = 'text'
+    xhr.onload = function(e){
+      var result= JSON.parse(xhr.responseText);
+      var show= document.querySelector('.result')
+      if (result.result=='success') show.innerHTML="result.meaning";
+      else show.innerHTML='not found';
+    }
+    xhr.send(formdata)
+  }
+     
+
+   
+    </script>
+  </body>
+</html>
