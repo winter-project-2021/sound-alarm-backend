@@ -1,6 +1,6 @@
 # sound-alarm-backend
 
-1. fp_test 결과 확인
+1. audio_fp의 fp_test 결과 확인
   1) npm install 후 node_modules의 fpcalc의 index.js의 46번째 줄을 results.fingerprint=fingerprint; 로 수정, 47~50번째 줄 주석처리
   2) node test.js로 코드 실행
      - 2번째 줄 WRONGDIGIT은 비교할 두 소리지문 element들의 다른 digit 개수 평균 기준값이다. 만약 비교결과 소리지문 비교 결과 나온 값이 이보다 작으면 콘솔에 표시된다.   
@@ -20,3 +20,10 @@
      - 소리 지문은 플레이 시간에 따라 그 길이가 비례하지만 1~3초 부근의 소리 지문은 이러한 비례 관계가 정확하게 성립하지 않는 것 같다. ( 즉 짧을 수록 부정확함)
      - doorbell_answer.mp3를 돌렸을 때 소리 위치가 40, 104, 132 부근에서 발생하는 것을 확인할 수 있으며  다른 doorbell_test를 돌리면 1을 제외한 2~4에서는 위치는 조금 부정확하더라도 
        크게 세 지점에서 초인종 소리가 발생했다는 것을 확인할 수 있다.
+       
+2. audio-fp 
+  1) app. js 실행 후 localhost의 접속
+  2) 감지시작을 누른 후 3초 이상 녹음 한 뒤 감지 중단을 누른다.  public/wav에 전송된 blob이 변환되어 wav 파일로 저장되고 이와 동시에 server console( VSC console)에서 소리지문을 돌린
+     결과가 출력됨. (현재는 doorbell.wav)
+     
+  3) 결과 : 그렇게 좋지 않음. test.js에서 감지 기준을 바꿀 수 있는데 초인종 소리로 인식시킬 경우와 일반 음악소리를 인식시켰을 때의 유사도 차이가 그렇게 크지 않음.
