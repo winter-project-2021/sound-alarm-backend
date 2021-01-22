@@ -10,7 +10,7 @@ var recorder= require('recorder-js');
 var ffmpeg = require('ffmpeg');
 //var upload = multer( { dest: './public/download/' });
 var upload = multer();
-var compare = require('./test.js');
+var compare = require('./src/test.js');
 const { json } = require('express');
 
 // var storage = multer.diskStorage({
