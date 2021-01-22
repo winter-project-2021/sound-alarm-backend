@@ -5,8 +5,13 @@ var fpcalc = require("fpcalc");
 var path = require('path')
 var multer= require('multer');
 const fs = require('fs');
-var upload = multer({ dest: './public/download/' });
+var upload = multer();
+var recorder= require('recorder-js');
 var ffmpeg = require('ffmpeg');
+//var upload = multer( { dest: './public/download/' });
+var upload = multer();
+var compare = require('./test.js');
+const { json } = require('express');
 
 // var storage = multer.diskStorage({
 //     filename: function(req,file,cb){
@@ -27,18 +32,26 @@ app.get('/',function(req,res){
     res.sendFile(path.join(__dirname,'./public/recorder.html'));
 });
 
-app.post('/ajax',upload.single('please'),function(req,res){  
-       //fs.writeFileSync('./public/mp3/'+ req.file.originalname+'.mp3', Buffer.from(new Uint8Array(req.file.buffer)));      
+var time= new Date();
+
+app.post('/ajax',upload.single('please'),function(req,res){
+       
+       var name='./public/mp3/'+ time.getHours()+time.getMinutes()+time.getSeconds()+'.wav'
+       fs.writeFileSync(name, Buffer.from(new Uint8Array(req.file.buffer)));      
        //makemp3(req);
-       fpcheck(req.file.filename);
        console.log(req.file);
+       compare.compare(name,'./public/mp3/doorbell.wav');
+       //num2= fpcheck('./public/mp3/doorbell.mp3').fingerprint;
+       //compare.compare(num1,num2,'result');
+       res.json({"result":"good"});
+       
 
 })
 
 function makemp3(req){
     try{
         var process = new ffmpeg(req.file.path);
-        var name = './public/mp3/'+ req.file.filename+'.mp3w';
+        var name = './public/mp3/'+ req.file.filename+'.mp3';
         //console.log(name,process);
         process.then(function(audio){
             audio.fnExtractSoundToMP3(name,function(error,file){
@@ -58,7 +71,7 @@ function makemp3(req){
 
 function fpcheck(file){
     try{
-    fpcalc('public/mp3/blob.mp3',{'raw':true},function(err,result){
+    fpcalc(file,{'raw':true},function(err,result){
         console.log(result);
     })
     } catch(e){
