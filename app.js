@@ -1,24 +1,38 @@
 var express = require('express');
-var app= express ();
 var bodyParser = require('body-parser');
 var fpcalc = require("fpcalc");  
 var path = require('path')
 var multer= require('multer');
 const fs = require('fs');
-var upload = multer();
-var recorder= require('recorder-js');
-var ffmpeg = require('ffmpeg');
 //var upload = multer( { dest: './public/download/' });
-var upload = multer();
 var compare = require('./src/test.js');
 const { json } = require('express');
+const mongoose = require('mongoose');
+const musicmodel= require('./model/music.js')
+require('dotenv').config();
+
+
+var app = express ();
+var upload = multer();
+
 
 // var storage = multer.diskStorage({
 //     filename: function(req,file,cb){
 //         cb(null,file.fieldname+)
 //     }
 // })
+// const uri= process.env.ATLAS_URI;
+// mongoose.connect(uri,{
+//   useNewUrlParser: true,
+//   useCreateIndex: true,
+//   useUnifiedTopology: true
+// })
 
+// const connection= mongoose.connection;
+
+// connection.once("open",()=>{
+//     console.log("MongoDB database connection success");
+// });
 
 app.listen(3000,function(){
     console.log("starting the server");
@@ -28,21 +42,39 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false, limit: '1gb'}))
 
+
+
+// db.connect({
+//     host: process.env.DB_HOST,
+//     username: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD
+// });
+
+
 app.get('/',function(req,res){
     res.sendFile(path.join(__dirname,'./public/recorder.html'));
 });
 
 var time= new Date();
 
+// app.post('/',upload.single('music'),(req,res,next)=>{
+//     var obj={
+//         _id: 'hi',
+//         name: 'req.body.name',
+//         music:{
+//             data: fs.readFileSync(req.file.buffer)
+//         }
+//     }
+//     console.log(req.file)
+// })
+
 app.post('/ajax',upload.single('please'),function(req,res){
-       
-       var name='./public/mp3/'+ time.getHours()+time.getMinutes()+time.getSeconds()+'.wav'
-       fs.writeFileSync(name, Buffer.from(new Uint8Array(req.file.buffer)));      
-       //makemp3(req);
+
+    
+       var name='./public/wav/'+ time.getHours()+time.getMinutes()+time.getSeconds()+'.wav'// 저장 파일 이름
+       fs.writeFileSync(name, Buffer.from(new Uint8Array(req.file.buffer))); // buffer의 blob을 wav로 내려받음
        console.log(req.file);
-       compare.compare(name,'./public/mp3/doorbell.wav');
-       //num2= fpcheck('./public/mp3/doorbell.mp3').fingerprint;
-       //compare.compare(num1,num2,'result');
+       compare.compare(name,'./public/wav/electronic3.wav');  // fingerprint 계산 및 비교 
        res.json({"result":"good"});
        
 

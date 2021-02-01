@@ -9,8 +9,20 @@
     <button class= 'a'>감지시작</button>
     <button class= 'b'>감지중단</button>
     <audio controls></audio>
-    <audio controls class="show"></audio>
     <div class='result'></div>
+
+    <div>
+    <form action="/" method="post" enctype="multipart/form-data">
+      <div><label for='name'>music name</label>
+        <input type='text' id='name' value="" name="name" required> 
+      </div>
+      <div><label for='music'> upload original</label>
+        <input type ="file" id='music' name='music' value="" required>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
     <script>
 
     var audio=document.querySelector('audio');
@@ -25,9 +37,9 @@
     navigator.mediaDevices.getUserMedia ({audio: true})
     .then(function(stream) {
         audio.srcObject = stream;
-      
      var ac = new AudioContext();
      var source = ac.createMediaStreamSource(stream);
+    
      var dest = ac.createMediaStreamDestination();
      var mediaRecorder = new MediaRecorder(dest.stream);
      source.connect(dest);
@@ -38,36 +50,13 @@
        // push each chunk (blobs) in an array
        chunks.push(evt.data);
        var blob = new Blob(chunks, { 'type' : 'audio/wav' });
-      //  blob = URL.createObjectURL(blob);
        console.log(blob);
       sendAjax('http://127.0.0.1:3000/ajax',blob);
        chunks=[]
      };
 
-    //  mediaRecorder.onstop = function(evt) {
-    //    // Make blob out of our blobs, and open it.
-    //    chunks.push(evt.data);
-    //    var blob = new Blob(chunks, { 'type' : 'audio/wav' });
-    //    console.log(blob);
-    //   sendAjax('http://127.0.0.1:3000/ajax',blob);
-    //    chunks=[]
-    //  };
-
      a.addEventListener("click", function(e) {
-      mediaRecorder.start();
-      // var detect= setInterval(function(){
-      //       mediaRecorder.start();
-      //       setTimeout (function(){
-      //         mediaRecorder.stop();
-      //       },4000);
-      //       },6000);
-      //       console.log('start');
-              
-      //       setTimeout (function(){
-      //         mediaRecorder.stop();
-      //       },4000);
-           
-
+          mediaRecorder.start();
            b.addEventListener('click',function(e){
               //clearInterval(detect);
               mediaRecorder.stop();
@@ -76,12 +65,13 @@
           });
     })
   }
+
+
   function sendAjax(url,data){
     var xhr= new XMLHttpRequest();
     var formdata= new FormData();
     formdata.append("please",data);
     xhr.open('post',url)
-    // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
     xhr.responseType = 'text'
     xhr.onload = function(e){
       var result= JSON.parse(xhr.responseText);
