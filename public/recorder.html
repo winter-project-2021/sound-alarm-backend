@@ -38,8 +38,8 @@
     .then(function(stream) {
         audio.srcObject = stream;
      var ac = new AudioContext();
-     var source = ac.createMediaStreamSource(stream);
-    
+     var source = ac.createMediaStreamSource(stream); 
+     
      var dest = ac.createMediaStreamDestination();
      var mediaRecorder = new MediaRecorder(dest.stream);
      source.connect(dest);
@@ -51,14 +51,13 @@
        chunks.push(evt.data);
        var blob = new Blob(chunks, { 'type' : 'audio/wav' });
        console.log(blob);
-      sendAjax('http://127.0.0.1:3000/ajax',blob);
+      sendAjax('http://127.0.0.1:3000/ajax',blob);//blob을 해당 주소로 보냄.
        chunks=[]
      };
 
      a.addEventListener("click", function(e) {
           mediaRecorder.start();
            b.addEventListener('click',function(e){
-              //clearInterval(detect);
               mediaRecorder.stop();
               console.log('off');
               });
@@ -67,13 +66,13 @@
   }
 
 
-  function sendAjax(url,data){
+  function sendAjax(url,data){//formdata에 data를 담아서 해당 url로 보냄.
     var xhr= new XMLHttpRequest();
     var formdata= new FormData();
     formdata.append("please",data);
     xhr.open('post',url)
     xhr.responseType = 'text'
-    xhr.onload = function(e){
+    xhr.onload = function(e){//response가 왔을 때 출력
       var result= JSON.parse(xhr.responseText);
       var show= document.querySelector('.result')
       if (result.result=='success') show.innerHTML="result.meaning";
