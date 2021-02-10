@@ -12,24 +12,45 @@
     <div class='result'></div>
 
     <div>
-    <form action="/" method="post" enctype="multipart/form-data">
-      <div><label for='name'>music name</label>
-        <input type='text' id='name' value="" name="name" required> 
-      </div>
       <div><label for='music'> upload original</label>
-        <input type ="file" id='music' name='music' value="" required>
+        <input type ="file" id='music' name='music' accept="audio/*" required>
+        <input type ='text' id='text'  name='text'>
       </div>
-      <button type="submit">Submit</button>
-    </form>
+      <button class='login'>login</button>
+      <button class='s'>Submit</button>
+      <button class='d'>delete</button>
+      <button class='u'>update</button>
+      <button class='ts'>textSubmit</button>
+      <button class='td'>textdelete</button>
+      <button class='tu'>textupdate</button>
+      <button class='set'>setting</button>
+
+    <div>
+
   </div>
 
     <script>
 
     var audio=document.querySelector('audio');
-    var a = document.querySelector('.a')
+    var login=document.querySelector('.login');
+    var a = document.querySelector('.a');
     var b = document.querySelector('.b');
+    var c = document.querySelector('music');
+    var s = document.querySelector('.s'); 
+    var d = document.querySelector('.d');
+    var u = document.querySelector('.u');
+    var ts = document.querySelector('.ts');
+    var td = document.querySelector('.td');
+    var tu = document.querySelector('.tu');
+    var set = document.querySelector('.set');
+
     var clicked = false;
     var chunks = [];
+    var user={
+      username:'gildongsad'
+    }
+    var audioid=[];
+    var textid=[];
        
 
      if (navigator.mediaDevices) {
@@ -47,11 +68,11 @@
      
 
      mediaRecorder.ondataavailable = function(evt) {
-       // push each chunk (blobs) in an array
+  
        chunks.push(evt.data);
        var blob = new Blob(chunks, { 'type' : 'audio/wav' });
        console.log(blob);
-      sendAjax('http://127.0.0.1:3000/ajax',blob);//blob을 해당 주소로 보냄.
+      sendAjax('http://localhost:3000/audio/test',blob);//blob을 해당 주소로 보냄.
        chunks=[]
      };
 
@@ -62,27 +83,172 @@
               console.log('off');
               });
           });
+
+
+
+
+      //가상 login
+      login.addEventListener("click",function(e){
+      console.log(user);
+      var formdata= new FormData();
+      formdata.append("username",user.username);
+
+      for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
+    
+      axios.post('http://localhost:3000/',formdata
+      ,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}
+    )
+    .then(response=>{
+      console.log(response.data)
+      user=response.data
+      console.log(user);
     })
+
+  })
+      //setting 변경 : default => language: '한국어',alarmpush: true, alarmsound: 1, alarm: true,
+      set.addEventListener("click",function(e){
+        axios.put('http://localhost:3000/setting',{
+        _id: user._id,
+        language: 'english',
+        alarmpush: true,
+        alarmsound: 1,
+        alarm: false
+      
+    }).then(response=>{
+      console.log(response.data);
+     })
+       })
+
+      //audio 등록, 이름 변경, 삭제    
+      s.addEventListener("click",function(e){
+      let file=document.getElementById('music');   
+      var formdata= new FormData();
+      formdata.append("data",file.files[0]);
+      formdata.append("_id",user._id);
+      formdata.append("username",user.username);
+
+      for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
+    
+      axios.post('http://localhost:3000/audio',formdata
+      ,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}
+    )
+    .then(response=>{
+      console.log(response.data)
+      audioid.push(response.data._id)
+    })
+  })
+
+    d.addEventListener('click',function(e){
+      console.log('delete');
+      console.log(audioid);
+      axios.delete('http://localhost:3000/audio',{
+        data:{
+          _id: user._id,
+          audioid:audioid[0]
+        }
+      }).then(response=>{
+        console.log(response.data);
+        audioid=[];
+       })
+  })
+
+    u.addEventListener('click',function(e){
+      console.log('update');
+      console.log(audioid);
+      axios.put('http://localhost:3000/audio',{
+        
+          _id: user._id,
+          audioid:audioid[0],
+          name: 'changed',
+          sensitivity: 5
+        
+      }).then(response=>{
+        console.log(response.data);
+       })
+    })
+
+
+
+    //text 등록, 이름 변경, 삭제    
+    ts.addEventListener("click",function(e){
+      let text=document.getElementById('text');
+      console.log(text.value)
+      var formdata=new FormData();
+      formdata.append("text",text.value);
+      formdata.append("_id",user._id);
+      formdata.append("username",user.username);
+
+      for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
+    
+      axios.post('http://localhost:3000/text',formdata
+      ,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}
+    )
+    .then(response=>{
+      console.log(response.data)
+      textid.push(response.data._id)
+    })
+  })
+      td.addEventListener('click',function(e){
+      console.log('delete');
+      console.log(textid);
+      axios.delete('http://localhost:3000/text',{
+        data:{
+          _id: user._id,
+          textid:textid[0]
+        }
+      }).then(response=>{
+        console.log(response.data);
+        textid=[];
+       })
+      })
+
+       tu.addEventListener('click',function(e){
+      console.log('update');
+      console.log(textid);
+      axios.put('http://localhost:3000/text',{
+        
+          _id: user._id,
+          textid:textid[0],
+          text: 'changed'
+        
+      }).then(response=>{
+        console.log(response.data);
+       })
+      })
+
+
+    })
+
   }
 
 
-  function sendAjax(url,data){//formdata에 data를 담아서 해당 url로 보냄.
-    var xhr= new XMLHttpRequest();
-    var formdata= new FormData();
-    formdata.append("please",data);
-    xhr.open('post',url)
-    xhr.responseType = 'text'
-    xhr.onload = function(e){//response가 왔을 때 출력
-      var result= JSON.parse(xhr.responseText);
-      var show= document.querySelector('.result')
-      if (result.result=='success') show.innerHTML="result.meaning";
-      else show.innerHTML='not found';
-    }
-    xhr.send(formdata)
+  function sendAjax(url,data){
+       var formdata= new FormData();
+      formdata.append("data",data);
+     
+      axios.post(url,formdata
+      ,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}
+    )
+    .then(response=>{
+      console.log(response.data)
+    })
   }
      
 
    
     </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </body>
 </html>
