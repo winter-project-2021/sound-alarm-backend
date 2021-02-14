@@ -1,10 +1,10 @@
 # sound-alarm-backend
 
-2/10 업데이트 내용
+2/14 업데이트 내용
 
 1) route 설정, mongodb와 server 기본적인 연결 구축 (완성)
-2) audio 파일 insert 조건( 크기(완성), 개수(미완))
-3) 마이크 sample fp와 기존 audio fp 비교 (미완)
+2) validation 설정: audio 및 text 개수, audio 크기, 이름 
+3) 마이크 sample fp와 기존 audio fp 비교 => 두가지 모드 (test: audio 등록 및 민감도 변경 때 사용 / compare: 일반 앱 구동 시 사용)
 
 
 
