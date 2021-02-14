@@ -7,7 +7,6 @@ require('dotenv').config();
 
 var app = express ();
 
-
 mongoose.connect(process.env.ATLAS_URI, { 
     useFindAndModify: false,
     useNewUrlParser: true, 

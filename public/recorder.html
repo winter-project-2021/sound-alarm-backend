@@ -24,6 +24,7 @@
       <button class='td'>textdelete</button>
       <button class='tu'>textupdate</button>
       <button class='set'>setting</button>
+      <button class='test'>mode</button>
 
     <div>
 
@@ -43,11 +44,13 @@
     var td = document.querySelector('.td');
     var tu = document.querySelector('.tu');
     var set = document.querySelector('.set');
+    var test = document.querySelector('.test');
 
     var clicked = false;
     var chunks = [];
+    var mode="compare";
     var user={
-      username:'gildongsad'
+      username:'gildong'
     }
     var audioid=[];
     var textid=[];
@@ -78,11 +81,13 @@
 
      a.addEventListener("click", function(e) {
           mediaRecorder.start();
-           b.addEventListener('click',function(e){
+          console.log('start')
+          });
+     
+          b.addEventListener('click',function(e){
               mediaRecorder.stop();
               console.log('off');
               });
-          });
 
 
 
@@ -124,9 +129,11 @@
 
       //audio 등록, 이름 변경, 삭제    
       s.addEventListener("click",function(e){
-      let file=document.getElementById('music');   
+      let file=document.getElementById('music');
+      let text=document.getElementById('text');     
       var formdata= new FormData();
       formdata.append("data",file.files[0]);
+      formdata.append("name",text.value);
       formdata.append("_id",user._id);
       formdata.append("username",user.username);
 
@@ -141,6 +148,7 @@
     .then(response=>{
       console.log(response.data)
       audioid.push(response.data._id)
+      console.log(audioid);
     })
   })
 
@@ -150,11 +158,11 @@
       axios.delete('http://localhost:3000/audio',{
         data:{
           _id: user._id,
-          audioid:audioid[0]
+          audioid:audioid[audioid.length-1]
         }
       }).then(response=>{
         console.log(response.data);
-        audioid=[];
+        audioid.pop();
        })
   })
 
@@ -203,11 +211,11 @@
       axios.delete('http://localhost:3000/text',{
         data:{
           _id: user._id,
-          textid:textid[0]
+          textid:textid[textid.length-1]
         }
       }).then(response=>{
         console.log(response.data);
-        textid=[];
+        textid.pop();
        })
       })
 
@@ -228,13 +236,30 @@
 
     })
 
+    test.addEventListener('click',function(e){
+      if(mode==="compare") {mode="test";}
+      else{ mode="compare";}
+      console.log(mode)
+    })
+
+
   }
+
 
 
   function sendAjax(url,data){
        var formdata= new FormData();
-      formdata.append("data",data);
-     
+       formdata.append("data",data);
+      formdata.append("_id",user._id)
+       if(mode==='compare'){
+        formdata.append("mode","compare");
+       }else if(mode==='test'){
+        formdata.append('audioid',audioid);
+        formdata.append('sensitivity',80);
+        formdata.append("mode","test")
+       }
+       for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
+      
       axios.post(url,formdata
       ,{
       headers: {

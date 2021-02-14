@@ -22,12 +22,12 @@ router.post('/',upload.none(),function(req,res){// login 관련, req.body._id에
         if(err) console.log(err);
         if(!document){
             user.create(filter,function(err,document){
-                if(err) console.log(err)
+                if(err) res.send({result:'failure',msg:err});
                 else res.send(document)
             })
         }
         
-        res.send(document);
+        else res.send(document);
     });
 
 
