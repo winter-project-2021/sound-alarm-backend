@@ -1,5 +1,13 @@
 # sound-alarm-backend
 
+2/10 업데이트 내용
+
+1) route 설정, mongodb와 server 기본적인 연결 구축 (완성)
+2) audio 파일 insert 조건( 크기(완성), 개수(미완))
+3) 마이크 sample fp와 기존 audio fp 비교 (미완)
+
+
+
 1. audio_fp의 fp_test 결과 확인
   1) npm install 후 node_modules의 fpcalc의 index.js의 46번째 줄을 results.fingerprint=fingerprint; 로 수정, 47~50번째 줄 주석처리
   2) node test.js로 코드 실행
