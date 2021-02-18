@@ -1,10 +1,19 @@
 # sound-alarm-backend
+2/18 수정사항
 
-2/10 업데이트 내용
+1) atlas mongodb에 프로젝트 아이디로 구글로그인을 하면 실제 저장된 collection을 확인 가능. 
+2) audio file size validation 추가 : 30000 ~ 1000000 byte(30kb ~ 1mb) , 음악파일에 따라서 용량과 재생시간의 비례정도가 다른 것으로 보여서 시간을 기준삼기 어려움. 
+3) fp 비교 알고리즘 중 test 모드에서 req 중 sensitivity parameter 제외
+4) failure, error 형식 통일: 둘 다 {result:, msg:} 형태의 json
+5) db에 저장된 buffer를 프론트의 audio tag src로 삽입하여 재생 가능. 자세한 것은 recorder.html 가상 login 부분 참조.
+
+
+
+2/14 업데이트 내용
 
 1) route 설정, mongodb와 server 기본적인 연결 구축 (완성)
-2) audio 파일 insert 조건( 크기(완성), 개수(미완))
-3) 마이크 sample fp와 기존 audio fp 비교 (미완)
+2) validation 설정: audio 및 text 개수, audio 크기, 이름 
+3) 마이크 sample fp와 기존 audio fp 비교 => 두가지 모드 (test: audio 등록 및 민감도 변경 때 사용 / compare: 일반 앱 구동 시 사용)
 
 
 
