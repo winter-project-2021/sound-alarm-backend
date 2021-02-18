@@ -8,7 +8,7 @@
 
     <button class= 'a'>감지시작</button>
     <button class= 'b'>감지중단</button>
-    <audio controls></audio>
+    
     <div class='result'></div>
 
     <div>
@@ -47,6 +47,7 @@
     var test = document.querySelector('.test');
 
     var clicked = false;
+    let num=0;
     var chunks = [];
     var mode="compare";
     var user={
@@ -60,7 +61,6 @@
     console.log('getUserMedia supported.');
     navigator.mediaDevices.getUserMedia ({audio: true})
     .then(function(stream) {
-        audio.srcObject = stream;
      var ac = new AudioContext();
      var source = ac.createMediaStreamSource(stream); 
      
@@ -110,6 +110,15 @@
       console.log(response.data)
       user=response.data
       console.log(user);
+      for(var ele of user.audio){
+        num++;
+        let sound= document.createElement('audio')
+        let musicsrc=URL.createObjectURL(new Blob([new Uint8Array (ele.buffer.data)]))// buffer를 uint8array에 담고 이를 통해 blob 생성 후 URL로 변환.
+        sound.id =num;
+        sound.controls='controls'
+        sound.src=musicsrc;
+        document.querySelector('.result').append(sound);       
+      }
     })
 
   })
@@ -149,6 +158,16 @@
       console.log(response.data)
       audioid.push(response.data._id)
       console.log(audioid);
+      let sound= document.createElement('audio')
+      let musicblob=new Blob([new Uint8Array (response.data.buffer.data)])
+      console.log(musicblob);
+        let musicsrc=URL.createObjectURL(musicblob);
+        sound.id =num++;
+        sound.controls='controls'
+        sound.src=musicsrc;
+        sound.load();
+        sound.play();
+        document.querySelector('.result').append(sound);
     })
   })
 

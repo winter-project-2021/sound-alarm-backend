@@ -10,12 +10,20 @@ const mongoose= require('mongoose');
 router.post('/',upload.none(),async function(req,res){//나중에 front 연결시 body로 userid를 보냄.
         try{
         let filter={_id:req.body._id}  // 빈 query 왔을 때 막기,  개수제한 구현(?)
-        let update={_id: mongoose.Types.ObjectId(),
-                    text:req.body.text}
+        let update={
+                    _id: mongoose.Types.ObjectId(),
+                    text:req.body.text
+                    }
         
                 user.findOne(filter,{"stt":1},function(err,document){
                     if(err) {console.log(err);res.send({result:"failure",msg:err.message});}
-                    else {
+                    else {  
+                        for (var ele of document.stt){
+                            if(ele.text===update.text){
+                                res.send({result:"failure",msg: "That text has already registered"});
+                                return;
+                            }
+                        }
                             document.stt.push(update);
                             document.save(function(err){
                                if(err){

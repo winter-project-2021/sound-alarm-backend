@@ -14,15 +14,22 @@ router.post('/',upload.single('data'),async function(req,res){//나중에 front�
         let update= {
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
-                data:req.file.buffer,
+                buffer:req.file.buffer,
                 size:req.file.size,
-                sensitivity:15,
                 fingerprint: fingerprint
         }   
-    
+        controller.getaudiofile(req.file.buffer);
         user.findOne(filter,{"audio":1},function(err,document){
+             
              if(err) {res.send({result:"failure",msg:err.message});}
-             else {
+             else {  
+                    for (var ele of document.audio){
+                        if(ele.name===update.name){
+                            res.send({result:"failure",msg: "That name has already registered"});
+                            return;
+                        }
+                    }
+
                      document.audio.push(update);
                      document.save(function(err){
                         if(err){

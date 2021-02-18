@@ -24,9 +24,8 @@ const bringoriginalfp= (req)=>{ return new Promise((resolve,reject)=>{
     let filter={_id:req.body._id}
     let option={audio:1};
     let sensitivity;
-    if(mode==='test'){ // sensitivity 조정 모드 일때
+    if(mode==='test'){ // sensitivity 조정 모드: audioid로 현재 테스트하는 소리파일의 fp만 가져옴. 
         option={audio:{$elemMatch:{_id:req.body.audioid}}};
-        sensitivity=req.body.sensitivity;
     }
     user.findOne(filter,option,function(err,doc){
         if(err) {console.log(err);
@@ -34,7 +33,7 @@ const bringoriginalfp= (req)=>{ return new Promise((resolve,reject)=>{
         else{
         let fingerprint=[];
         for (var ele of doc.audio){
-            if(mode==='compare') sensitivity=ele.sensitivity;//일반 비교 모드일 때 난이도.
+            sensitivity=ele.sensitivity;
             fingerprint.push({"name":ele.name,"fp": ele.fingerprint,"sensitivity":sensitivity})
         }
         console.log(fingerprint);
@@ -94,17 +93,21 @@ const compare= (fp1,fp2) => {// fp 비교 모듈
     }
     
     const handleErrors = (err)=>{
-        console.log(err.message);
-        let errors={result:"failure", type:[]};
+        console.log(err.errors);
+        let errors={result:"failure", msg:""};
+        if(err.code===11000){
+            errors.msg='That sound or text is already registered!'
+        }
+
         if(err.message.includes('validation failed')|err.message.includes('Validation failed')){
             console.log(err.errors);
-            Object.values(err.errors).forEach((ele)=>{
-                errors.type.push(ele.properties.message);
-            })
+            ele=Object.values(err.errors)[0];
+                errors.msg=ele.properties.message;
         }
+        
         return errors
     }
 
 
-  module.exports={compare,getfingerprint,bringoriginalfp,handleErrors}
+  module.exports={compare,getfingerprint,bringoriginalfp,handleErrors,getaudiofile}
 
