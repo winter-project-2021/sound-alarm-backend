@@ -1,4 +1,12 @@
 # sound-alarm-backend
+2/18 수정사항
+
+1) audio file size validation 추가 : 30000 ~ 1000000 byte(30kb ~ 1mb) , 음악파일에 따라서 용량과 재생시간의 비례정도가 다른 것으로 보여서 시간을 기준삼기 어려움. 
+2) fp 비교 알고리즘 중 test 모드에서 req 중 sensitivity parameter 제외
+3) failure, error 형식 통일: 둘 다 {result:, msg:} 형태의 json
+4) db에 저장된 buffer를 프론트의 audio tag src로 삽입하여 재생 가능. 자세한 것은 recorder.html 가상 login 부분 참조.
+
+
 
 2/14 업데이트 내용
 
