@@ -75,22 +75,31 @@
        chunks.push(evt.data);
        var blob = new Blob(chunks, { 'type' : 'audio/wav' });
        console.log(blob);
-      sendAjax('http://localhost:3000/audio/test',blob);//blob을 해당 주소로 보냄.
+      sendAjax('http://localhost:4000/audio/test',blob);//blob을 해당 주소로 보냄.
        chunks=[]
      };
 
      a.addEventListener("click", function(e) {
-          mediaRecorder.start();
-          console.log('start')
-          });
-     
+          function stacking(){
+            mediaRecorder.start();
+          let timer= setTimeout(()=>{
+                                    
+                                    console.log('start');
+                                    mediaRecorder.stop();
+                                    console.log('off');
+                                    },
+                                    1000);
+          }
+          
+          let timeID= setInterval(stacking,7000);
+
           b.addEventListener('click',function(e){
-              mediaRecorder.stop();
-              console.log('off');
+              clearInterval(timeID);
+              console.log('stop');
               });
-
-
-
+          
+          });
+           
 
       //가상 login
       login.addEventListener("click",function(e){
@@ -100,7 +109,7 @@
 
       for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
     
-      axios.post('http://localhost:3000/',formdata
+      axios.post('http://localhost:4000/login',formdata
       ,{
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -124,7 +133,7 @@
   })
       //setting 변경 : default => language: '한국어',alarmpush: true, alarmsound: 1, alarm: true,
       set.addEventListener("click",function(e){
-        axios.put('http://localhost:3000/setting',{
+        axios.put('http://localhost:4000/setting',{
         _id: user._id,
         language: 'english',
         alarmpush: true,
@@ -148,14 +157,14 @@
 
       for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
     
-      axios.post('http://localhost:3000/audio',formdata
+      axios.post('http://localhost:4000/audio',formdata
       ,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }}
     )
     .then(response=>{
-      console.log(response.data)
+      console.log(response)
       audioid.push(response.data._id)
       console.log(audioid);
       let sound= document.createElement('audio')
@@ -174,7 +183,7 @@
     d.addEventListener('click',function(e){
       console.log('delete');
       console.log(audioid);
-      axios.delete('http://localhost:3000/audio',{
+      axios.delete('http://localhost:4000/audio',{
         data:{
           _id: user._id,
           audioid:audioid[audioid.length-1]
@@ -188,7 +197,7 @@
     u.addEventListener('click',function(e){
       console.log('update');
       console.log(audioid);
-      axios.put('http://localhost:3000/audio',{
+      axios.put('http://localhost:4000/audio',{
         
           _id: user._id,
           audioid:audioid[0],
@@ -213,7 +222,7 @@
 
       for (var pair of formdata.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
     
-      axios.post('http://localhost:3000/text',formdata
+      axios.post('http://localhost:4000/text',formdata
       ,{
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -227,7 +236,7 @@
       td.addEventListener('click',function(e){
       console.log('delete');
       console.log(textid);
-      axios.delete('http://localhost:3000/text',{
+      axios.delete('http://localhost:4000/text',{
         data:{
           _id: user._id,
           textid:textid[textid.length-1]
@@ -241,7 +250,7 @@
        tu.addEventListener('click',function(e){
       console.log('update');
       console.log(textid);
-      axios.put('http://localhost:3000/text',{
+      axios.put('http://localhost:4000/text',{
         
           _id: user._id,
           textid:textid[0],
