@@ -1,4 +1,12 @@
 # sound-alarm-backend
+2/27 수정사항
+
+1) user.js unique 속성 제거
+2) error, exception handling
+3) 지속적인 소리파일 감지 가능
+4) blob에서 만들어진 파일들 제거
+
+
 2/18 수정사항
 
 1) atlas mongodb에 프로젝트 아이디로 구글로그인을 하면 실제 저장된 collection을 확인 가능. 
