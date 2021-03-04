@@ -13,8 +13,8 @@ const Audios = new Schema({
     },
     size:{
         type:Number,
-        validate:[function(val){return (val<300000)&&(val>30000);},
-            "Invalid size: recommend you to choose soundfile larger than 30kb and smaller than 300kb"]
+        validate:[function(val){return (val<300000);},
+            "Invalid size: recommend you to choose soundfile smaller than 300kb"]
     },
     sensitivity: {
         type:Number, 
