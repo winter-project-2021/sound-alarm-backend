@@ -120,7 +120,7 @@ const compare= (fp1,fp2) => {// fp 비교 모듈
     const handleErrors = (err)=>{
         try{
             console.log(err.errors);
-            let errors={result:"failure", msg:""};
+            let errors={result:"failure", ko:"",en:""};
             if(err.code===11000){
                 errors.msg='That sound or text is already registered!'
             }
@@ -128,7 +128,8 @@ const compare= (fp1,fp2) => {// fp 비교 모듈
             if(err.message.includes('validation failed')|err.message.includes('Validation failed')){
                 console.log(err.errors);
                 ele=Object.values(err.errors)[0];
-                    errors.msg=ele.properties.message;
+                    errors.ko=ele.properties.message.ko;
+                    errors.en=ele.properties.message.en;
             }
         
             return errors

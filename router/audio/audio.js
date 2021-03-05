@@ -25,7 +25,7 @@ router.post('/',upload.single('data'),async function(req,res){
              else {  
                 for (var ele of document.audio){
                     if(ele.name===update.name){
-                        res.send({result:"failure",msg: "That name has already registered"});
+                        res.send({result:"failure",ko:"이미 등록된 이름입니다.",en: "That name has already registered"});
                         return;
                     }
                 }
@@ -44,7 +44,7 @@ router.post('/',upload.single('data'),async function(req,res){
             }
         })}catch(err){ //server error handling
             console.log(err);
-            res.send({result:"error",msg:err.message});
+            res.send({result:"error",ko:err.message,en:err.message});
             }
   })
 
@@ -55,12 +55,12 @@ router.delete('/',function(req,res){
         user.updateOne(filter,{'$pull':{'audio': {_id:req.body.audioid}}},async function(err,deleted){
         if(err) res.send({result:"failure",msg:err.message});
         else {
-            if(deleted.n===0) res.send({result:"failure", msg:"not found"}) // if nothing has returned from the search
+            if(deleted.n===0) res.send({result:"failure",ko:"찾는 결과가 없습니다." ,en:"not found"}) // if nothing has returned from the search
             else res.send({result:"success",audioid:req.body.audioid});
         }
         })
     }catch(err){
-        res.send({result:"error",msg:err.message})
+        res.send({result:"error",ko:err.message,en:err.message})
     }
 })
     
@@ -78,7 +78,7 @@ router.put('/',function(req,res){
                     res.json(error);
                 }
                 else {
-                    if(updated.n===0) res.send({result:"failure", msg:"not found"})// if nothing has returned from the search
+                    if(updated.n===0) res.send({result:"failure", ko:"찾는 결과가 없습니다.",en:"not found"})// if nothing has returned from the search
                     else res.send({
                         result:"success",
                         audioid:req.body.audioid,
@@ -87,7 +87,7 @@ router.put('/',function(req,res){
                     });
                 }
     })}catch(err){
-        res.send({"result":"error","msg":err.message})
+        res.send({"result":"error","ko":err.message,"en":err.message})
     }
 })
 
@@ -121,7 +121,7 @@ router.post('/test',upload.single('data'),async function(req,res){// calculate t
     }
     catch(err){
          console.log(err);
-         res.send({"result":"error","msg":err.message});
+         res.send({"result":"error","ko":err.message,"en":err.message});
     }
 })
 

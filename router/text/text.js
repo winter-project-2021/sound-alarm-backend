@@ -16,11 +16,11 @@ router.post('/',upload.none(),async function(req,res){
                     }
         
         user.findOne(filter,{"stt":1},function(err,document){
-            if(err) {console.log(err);res.send({result:"failure",msg:err.message});}
+            if(err) {console.log(err);res.send({result:"failure",ko:err.message.ko,en:err.message.en,err:err});}
             else {  
                 for (var ele of document.stt){
                     if(ele.text===update.text){
-                        res.send({result:"failure",msg: "That text has already registered"});
+                        res.send({result:"failure",ko:"이미 등록된 텍스트입니다.",en: "That text has already registered"});
                         return;
                     }
                 }
@@ -40,7 +40,7 @@ router.post('/',upload.none(),async function(req,res){
         })
     }catch(err){
         console.log(err);
-        res.send({result:"error",msg:err});
+        res.send({result:"error",ko:err,en:err});
     }
 });
 
@@ -54,13 +54,13 @@ router.delete('/',function(req,res){
                 res.json(error);
             }
             else{
-                if(deleted.n===0) res.send({result:"failure", msg:"not found"})
+                if(deleted.n===0) res.send({result:"failure",ko:"찾는 결과가 없습니다.", en:"not found"})
                 else res.send({result:"success",textid:req.body.textid});
             }
     })
     }catch(err){
         console.log(err);
-        res.send({result:"error",msg:err});
+        res.send({result:"error",ko:err,en:err});
     }
 })
 
@@ -80,7 +80,7 @@ router.put('/',function(req,res){
             }})
     }catch(err){
         console.log(err);
-        res.send({result:"error",msg:err});
+        res.send({result:"error",ko:err,en:err});
     }
 })
 
