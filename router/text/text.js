@@ -70,13 +70,13 @@ router.put('/',function(req,res){
         user.updateOne(filter,
             {$set:{'stt.$.text':req.body.text}},
             {runValidators:true},
-            function(err,update){//user의 id와 audio object의 id
+            function(err,updated){//user의 id와 audio object의 id
                 if(err){
                     let error = controller.handleErrors(err);
                     res.json(error);
                 }else{
-                    console.log("update",update)
-                    res.send({result:"success",text:req.body.text,textid:req.body.textid});
+                    if(updated.n===0) res.send({result:"failure",ko:"찾는 결과가 없습니다.", en:"not found"})
+                    else res.send({result:"success",text:req.body.text,textid:req.body.textid});
             }})
     }catch(err){
         console.log(err);

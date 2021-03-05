@@ -128,8 +128,8 @@ const compare= (fp1,fp2) => {// fp 비교 모듈
             if(err.message.includes('validation failed')|err.message.includes('Validation failed')){
                 console.log(err.errors);
                 ele=Object.values(err.errors)[0];
-                    errors.ko=ele.properties.message.ko;
-                    errors.en=ele.properties.message.en;
+                    errors.ko=ele.properties.ko;
+                    errors.en=ele.properties.en;
             }
         
             return errors
