@@ -13,7 +13,7 @@ const Audios = new Schema({
     },
     size:{
         type:Number,
-        validate:[function(val){return (val<1000000);},
+        validate:[function(val){return (val<300000);},
             {ko:"파일 용량 문제, ",en:"Invalid size: recommend you to choose soundfile smaller than 300kb"}]
     },
     sensitivity: {
@@ -32,7 +32,7 @@ const Audios = new Schema({
 const userSchema = new Schema({
     username:{
         type:String,
-        required:[true,{ko:"유저 이름이 없습니다. 인터넷 및 구글 로그인 과정 중의 문제일 수 있습니다.",en:"no user name, it may be a problem with your connection or the google login"}]
+        required:[true,{ko:"유저 이름이 없습니다. 인터넷 및 구글 로그인 과정 중의 문제일 수 있습니다. 잠시 뒤 다시 실행해주세요.",en:"no user name, it may be a problem with your connection or the google login"}]
     },
     stt:{type:[{text:{
                         type:String,
