@@ -1,4 +1,4 @@
-var fpcalc = require("fpcalc");
+var fpcalc = require("../fpcalc.js");
 const fs = require('fs');
 const user= require('../model/user.js');
 
